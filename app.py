@@ -186,4 +186,4 @@ def predDashboard():
     '''
     return render_template("Dashboards/pred-dashboard.html")
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

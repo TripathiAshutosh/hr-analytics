@@ -1,0 +1,26 @@
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+    color: white;
+    text-align: center;
+ }
+
+ .btn-info {
+	color: #fff;
+	background-color: #dd0d81 !important;
+	border-color: #dd0d81 !important;
+}
+.btn-link {
+	font-weight: 400;
+	color: #dd0d81 !important;
+	background-color: transparent;
+}
+a {
+	color: #dd0d81 !important;
+	text-decoration: none;
+	background-color: transparent;
+	-webkit-text-decoration-skip: objects;
+}

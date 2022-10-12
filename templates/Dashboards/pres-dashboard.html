@@ -1,0 +1,245 @@
+{% extends 'Layout.html' %}
+
+{% block content %}
+
+<script src='https://cdn.plot.ly/plotly-2.14.0.min.js'></script>
+<!-- https://www.kaggle.com/code/faressayah/ibm-hr-analytics-employee-attrition-performance -->
+
+<div class="card">
+    <div class="card-header text-center">
+        <h5><b>HR Analytics : Prescriptive Dashboard</b></h5>
+    </div>
+
+    <div class="card-body">
+      
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <a data-toggle="collapse" href="#attritionAnalysis" aria-expanded="false" aria-controls="attritionAnalysis">
+                  Relationship between Attrition and other Attributes
+                </a>
+              </h5>
+            </div>
+        
+            <div id="attritionAnalysis" class="collapse show">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4" id="attritionAndGender"></div>
+                  <div class="col-md-4" id="attritionAndBusTravel"></div>
+                  <div class="col-md-4" id="attritionAndDepartment"></div>
+                </div><hr>
+                <div class="row">
+                  <div class="col-md-4" id="attritionAndMaritalStatus"></div>
+                  <div class="col-md-4" id="attritionAndWorkLifeBlnc"></div>
+                  <div class="col-md-4" id=""></div>
+                </div><hr>
+                <div class="row">                    
+                  <div class="col-md-12" id="attritionAndExperience"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <a data-toggle="collapse" href="#bivariateAnalysis" aria-expanded="false" aria-controls="bivariateAnalysis">
+                  Bivariate analysis
+                </a>
+              </h5>
+            </div>
+            <div id="bivariateAnalysis" class="collapse">
+              <div class="card-body">
+                 
+                  <div class="row">
+                    <div class="col-md-12" id="jobSatVsYrWithMngr"></div>
+                    <span class="col-md-12" style="
+                      text-align: initial;
+                      margin-left: 40px;
+                      margin-right: 40px;
+                      padding-right: 200px;
+                      margin-top: -40px;">We observe that the red bars are higher than the green bars only after 2 years , we can infer that employees generally tend to be comfortable working with the manager after 2 years.</span>
+                                         
+                </div><hr></hr> 
+                  <div class="row">
+                      <div class="col-md-4" id="overTimeAndPerformanceRating"></div>
+                     
+                      
+                  </div>
+                  
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingThree">
+              <h5 class="mb-0">
+                <a data-toggle="collapse" href="#univariateAnalysis" aria-expanded="false" aria-controls="univariateAnalysis">
+                  Individual Attribute Distribution - Univariate Analysis
+                </a>
+              </h5>
+            </div>
+            <div id="univariateAnalysis" class="collapse">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4" id="overallAttrition"></div>
+                  <div class="col-md-4" id="genderDistribution"></div>
+                  <div class="col-md-4" id="businessTravel"></div>
+              </div><hr>
+              <div class="row">
+                  <div class="col-md-4" id="deptWiseEmpDist"></div>
+                  <div class="col-md-4" id="skillDistibution"></div>
+                  <div class="col-md-4" id="jobRoleDistibution"></div>
+              </div><hr>
+              <div class="row">
+                  <div class="col-md-12" id="ageDistibution"></div>
+              </div>
+              <div class="row">
+                  <div class="col-md-12" id="salaryDistribution"></div>
+              </div>
+              </div>
+            </div>
+          </div>
+      
+    
+  </div>
+    
+</div>
+
+<div class="modal" id="progressBar" role="dialog" data-backdrop="static">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-info" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+$(function() {
+    
+    generateBarChart(JSON.parse('{{attrDictionary|tojson}}'), 'overallAttrition','Overall Attrition')
+    generateBarChart(JSON.parse('{{genderDsitribution|tojson}}'), 'genderDistribution','Gender Distribution')
+    generateBarChart(JSON.parse('{{businessTravelDict|tojson}}'), 'businessTravel','Business Travel Distribution')
+    generateBarChart(JSON.parse('{{deptWiseEmpDist|tojson}}'), 'deptWiseEmpDist','Department Wise Emp Distribution')
+    generateBarChart(JSON.parse('{{skillDistibution|tojson}}'), 'skillDistibution','Skill Distribution')
+    generateBarChart(JSON.parse('{{jobRoleDistibution|tojson}}'), 'jobRoleDistibution','Job Role Distribution')
+    generateBarChart(JSON.parse('{{ageDistibution|tojson}}'), 'ageDistibution','Age Distribution',1200,400)
+    generateHistogram(JSON.parse('{{salaryDistribution|tojson}}'),'salaryDistribution','Salary Distribution',1200, 400)
+    
+    barGroupList=['Excellent','Outstanding']
+    groupedBarChart(JSON.parse('{{overTimeAndPerformanceRating|tojson}}'),'overTimeAndPerformanceRating','Overtime vs Performance Rating',barGroupList,400, 400)
+    barGroupList=["Low","Medium","High","Very High"]
+    groupedBarChart(JSON.parse('{{jobSatVsYrWithMngr|tojson}}'),'jobSatVsYrWithMngr',
+    'Job Satisfaction VS Years with Current Manager',barGroupList,'group',1200, 600)
+    barGroupList=["Yes","No"]
+    groupedBarChart(JSON.parse('{{attritionAndBusTravel|tojson}}'),'attritionAndBusTravel',
+    'Attrition and Business Travel',barGroupList,'stack',400, 400)
+    groupedBarChart(JSON.parse('{{attritionAndGender|tojson}}'),'attritionAndGender',
+    'Attrition with respect to Gender',barGroupList,'stack',400, 400)
+    groupedBarChart(JSON.parse('{{attritionAndDepartment|tojson}}'),'attritionAndDepartment',
+    'Attrition with respect to Department',barGroupList,'stack',400, 400)
+    groupedBarChart(JSON.parse('{{attritionAndMaritalStatus|tojson}}'),'attritionAndMaritalStatus',
+    'Attrition with respect to Marital Status',barGroupList,400, 400)
+    groupedBarChart(JSON.parse('{{attritionAndWorkLifeBlnc|tojson}}'),'attritionAndWorkLifeBlnc',
+    'Attrition with respect to Work Life Balance',barGroupList,400, 400)
+    groupedBarChart(JSON.parse('{{attritionAndExperience|tojson}}'),'attritionAndExperience',
+    'Attrition and Experience in years',barGroupList,'stack',1200, 400)
+    
+});
+
+
+function generateBarChart(jsonData,divId,title, width=400, height=400){
+    var data = [
+  {
+    x: jsonData['categories'],
+    y: jsonData['values'],
+    type: 'bar',
+    text: jsonData['text']
+  }
+];
+    var layout = {
+        title: title,
+        autosize: false,
+        width: width,
+        height: height,
+        barmode: 'group'
+    };
+    Plotly.newPlot(divId, data,layout);
+}
+
+function generateHistogram(jsonData,divId,title,width=400, height=400){
+   
+    var trace = {
+        x: jsonData['xData'],
+        type: 'histogram',
+    };
+    var data = [trace];
+    var layout = {
+        title: title,
+        autosize: false,
+        width: width,
+        height: height,
+    };
+    Plotly.newPlot(divId, data,layout);
+}
+
+function groupedBarChart(jsonData,divId,title,groupList,barmode='group',width=400, height=400){
+  var data = []  
+  for(let i=0;i<groupList.length;i++){
+    // alert(jsonData['xData'+(i+1).toString()])
+    // alert(jsonData['yData'+(i+1).toString()])
+    // alert(groupList[i])
+    // alert(jsonData['text'+(i+1).toString()])
+    trace = {
+        x: jsonData['xData'+(i+1).toString()],
+        y: jsonData['yData'+(i+1).toString()],
+        name: groupList[i],
+        type: 'bar',
+        text: jsonData['text'+(i+1).toString()],
+        //width:0.3
+    }
+    data.push(trace)
+  }
+ 
+    var layout = {
+      title: title,
+      autosize: false,
+      width: width,
+      height: height,
+      barmode: barmode//'group'
+    };
+    Plotly.newPlot(divId, data, layout);
+}
+
+    function getResult() {
+        $("#progressBar").modal('show')
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('getResponseLinearReg')}}",
+            data: $("#inputForm").serialize(), // serializes the form's elements.
+            success: function (data) {
+                $("#result").html(data); // show response from the php script.
+            }, complete: function () {
+                $("#progressBar").modal('hide')
+            }
+        });
+    }
+
+    function presAnalyticsPlots(){
+        $("#progressBar").modal('show')
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('presDashboard')}}",
+            data: $("#inputForm").serialize(), // serializes the form's elements.
+            success: function (data) {
+               
+            }, 
+            complete: function () {
+                $("#progressBar").modal('hide')
+            }
+        });
+    }
+</script>
+
+
+{% endblock %}

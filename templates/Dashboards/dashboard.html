@@ -1,0 +1,38 @@
+
+{% extends 'Layout.html' %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+
+<div class="card">
+    <div class="card-header text-center">
+       <h4><b>HR Analytics - Dashboards</b></h4> 
+    </div>
+
+<div class="card-deck text-center">
+<div class="card">
+  <img class="card-img-top mx-auto" src="/static/images/MI1.png" style="width: 345px;height: 200px;" alt="Card image cap">
+  <div class="card-body">
+    <!-- <h5 class="card-title">Prescriptive Analytics</h5> -->
+    <p class="card-text">Prescriptive Analytics Dashboard having KPIs for Attrition use case</p>
+  </div>
+  <div class="card-footer">
+    <small class="text-muted"><button type="button" class="btn btn-info" onclick="window.location.href='/pres-dashboard'">Prescriptive Analytics</button></small>
+  </div>
+</div>
+<div class="card">
+  <img class="card-img-top mx-auto" src="/static/images/ML.png"style="width: 345px;height: 200px;" alt="Card image cap">
+  <div class="card-body">
+    <!-- <h5 class="card-title">Predictive Analytics</h5> -->
+    <p class="card-text">Predictive Analytics Dashboard having KPIs for Attrition use case models</p>
+  </div>
+  <div class="card-footer">
+    <small class="text-muted"><button type="button" class="btn btn-info" onclick="window.location.href='/pred-dashboard'">Predictive Analytics</button></small>
+  </div>
+</div>
+
+</div>
+</div>
+
+</div>
+{% endblock %}

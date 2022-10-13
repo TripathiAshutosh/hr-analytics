@@ -1,171 +1,463 @@
-
-
-
 {% extends 'layout.html' %}
 
 {% block content %}
 
+<script src='https://cdn.plot.ly/plotly-2.14.0.min.js'></script>
 
-<div class="container" style="margin-top: 20px;">
     <div class="card">
-        <div class="card-header text-center"><h4><b>Employee Attrition - Predictive Analysis</b></h4></div>
-        <div class="card-body">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header text-center"><h5><b>Input Employee Data</b></h5></div>
-                <form id="inputForm">
-                <div class="card-body">
-                    
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">CRIM</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="CRIM" id="crimInputBoxId" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">ZN</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="ZN" id="" value = "0">
-                        </div></div>
-                        <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">INDUS</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="INDUS" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">CHAS</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="CHAS" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">NOX</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="NOX" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">RM</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="RM" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">AGE</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="AGE" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">DIS</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="DIS" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">RAD</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="RAD" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">TAX</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="TAX" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">PT</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="PT" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">B</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="B" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label">LSTAT</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" type="text" name="LSTAT" id="" value = "0">
-                        </div>
-                    </div>
-                    <div class="card-footer text-center">
-                        <button type = "button" class="btn btn-info" onclick="getResult()" value = "submit" style="cursor: pointer;">Submit</button>
-                    </div>
-                </div>
-            </form>
-            </div>
+        <div class="card-header text-center">
+            <h4><b>Employee Attrition - Predictive Analysis</b></h4>
         </div>
-        <div class="col-md-4">
+
+        <div class="card-body">
+
             <div class="card">
-            <div class="card-header text-center"><h5><b>Prediction Result</b></h5></div>
-            <div class="card-body">
-                <div class="row">
-                    Model Predicted employee as potential (churner/non churner)->&nbsp;&nbsp; <span style="color:red"><p id="result"></p></span>
+                <div class="card-header d-flex" id="">                   
+                        <h5><a data-toggle="collapse" href="#modelComparison" aria-expanded="false"
+                            aria-controls="modelComparison">
+                            Model Comparison </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Top Performer - XGBoost | ROC_AUC_Score = 62.00% |Train Accuracy = 100% | Test Accuracy = 85.94%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="modelComparison">
+     
+                        <table class="table table-bordered">
+                            <thead>                                
+                                <th class="text-center"><h5><b>ROC_AUC Score Comparison</b></h5></th>
+                                <th class="text-center"><h5><b>Graphical Representation</b></h5></th>
+                                
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-left"  id="">
+                                        <ol>
+                                            <li>XGBOOST - roc_auc_score: 0.620</li>
+                                            <li>LIGHTGBM - roc_auc_score: 0.609</li>
+                                            <li>ADABOOST - roc_auc_score: 0.599</li>
+                                            <li>CATBOOST - roc_auc_score: 0.586</li>
+                                            <li>LOGISTIC REGRESSION - roc_auc_score: 0.546</li>
+                                            <li>RANDOM FOREST - roc_auc_score: 0.543</li>
+                                            <li>SUPPORT VECTOR MACHINE - roc_auc_score: 0.500</li>
+                                        </ol>
+                                    </td>
+                                    <td class="text-center"><img src="/static/images/modelComparison.png" width="500px;"></td>
+                                  
+                                </tr>
+                               <tr>
+                                <td colspan="2" id="topPerPieChart" class="text-center"></td>
+                               </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+
+            <div class="card">
+                <div class="card-header d-flex" id="headingOne">                   
+                        <h5><a data-toggle="collapse" href="#logisticRegression" aria-expanded="false"
+                            aria-controls="logisticRegression">
+                            Logistic Regression </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 92.91% | Test Accuracy = 85.26%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="logisticRegression">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="lr-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/lr_ts_cf.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"><img src="/static/images/lr_ts_cr.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/lr_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex" id="headingOne">                   
+                        <h5><a data-toggle="collapse" href="#randomForest" aria-expanded="false"
+                            aria-controls="randomForest">
+                            Random Forest Classifier </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 98.54% | Test Accuracy = 83.45%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="randomForest">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="rf-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/rf_featImp.png" width="600px;"></td>
+                                </tr>
+                                <tr>                
+                                    <td class="text-center"><img src="/static/images/rf_ts_cf.png"></td>                   
+                                    <td class="text-center"><img src="/static/images/rf_ts_cr.png" width="600px;"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/rf_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex" id="">                   
+                        <h5><a data-toggle="collapse" href="#xgboost" aria-expanded="false"
+                            aria-controls="xgboost">
+                            XGBoost Classifier </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 100% | Test Accuracy = 85.94%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="xgboost">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="xgb-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/xgb_featImp.png" width="600px;"></td>
+                                </tr>
+                                <tr>                
+                                    <td class="text-center"><img src="/static/images/xgb_ts_cf.png"></td>                   
+                                    <td class="text-center"><img src="/static/images/xgb_ts_cr.png" width="600px;"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/xgb_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex" id="">                   
+                        <h5><a data-toggle="collapse" href="#lgb" aria-expanded="false"
+                            aria-controls="lgb">
+                            LightGBM </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 100% | Test Accuracy = 85.03%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="lgb">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="lgb-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/lgb_ts_cf.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"><img src="/static/images/lgb_ts_cr.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/lgb_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex" id="">                   
+                        <h5><a data-toggle="collapse" href="#catBoost" aria-expanded="false"
+                            aria-controls="catBoost">
+                            CatBoost </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 98.45% | Test Accuracy = 85.03%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="catBoost">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="cb-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/cb_ts_cf.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"><img src="/static/images/cb_ts_cr.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/cb_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex" id="">                   
+                        <h5><a data-toggle="collapse" href="#adaBoost" aria-expanded="false"
+                            aria-controls="adaBoost">
+                            AdaBoost </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 89.50% | Test Accuracy = 82.31%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="adaBoost">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="ab-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/ab_ts_cf.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"><img src="/static/images/ab_ts_cr.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/ab_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex" id="headingOne">                   
+                        <h5><a data-toggle="collapse" href="#svm" aria-expanded="false"
+                            aria-controls="svm">
+                            Support Vector Machine </a></h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="ms-auto"><b>Train Accuracy = 99.32% | Test Accuracy = 85.03%</b></span>
+                </div>             
+                    <div class="card-body collapse" id="svm">
+     
+                        <table class="table table-bordered">
+                            <thead>
+                                <!-- <th class="text-center"><h5><b>Performance on Train Data</b></h5></th> -->
+                                <th class="text-center" colspan="2"><h5><b>Performance on Test Data</b></h5></th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"  id="svm-attrition-pie"></td>
+                                    <td class="text-center"><img src="/static/images/svm_ts_cf.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"><img src="/static/images/svm_ts_cr.png"></td>
+                                </tr>
+                                <tr>                                   
+                                    <td class="text-center" colspan="2"> <img src="/static/images/svm_pr_roc_auc.png"></td>
+                                </tr>
+                            </tbody>
+                        </table>    
+                                        
+                    </div>                   
+            </div>
+        
+
+        </div>
+      
+
+
+    </div>
+
+
+
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h5><b>Input Employee Data</b></h5>
+                    </div>
+                    <form id="inputForm">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">CRIM</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="CRIM" id="crimInputBoxId" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">ZN</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="ZN" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">INDUS</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="INDUS" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">CHAS</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="CHAS" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">NOX</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="NOX" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">RM</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="RM" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">AGE</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="AGE" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">DIS</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="DIS" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">RAD</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="RAD" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">TAX</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="TAX" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">PT</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="PT" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">B</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="B" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="control-label">LSTAT</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="text" name="LSTAT" id="" value="0">
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn btn-info" onclick="getResult()" value="submit"
+                                    style="cursor: pointer;">Submit</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h5><b>Prediction Result</b></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            Model Predicted employee as potential (churner/non churner)->&nbsp;&nbsp; <span
+                                style="color:red">
+                                <p id="result"></p>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
+
 <div class="modal" id="progressBar" role="dialog" data-backdrop="static">
     <div class="d-flex justify-content-center">
         <div class="spinner-border text-info" role="status">
             <span class="sr-only">Loading...</span>
-          </div>
+        </div>
     </div>
-   
-</div>
+
 </div>
 
+
 <script>
-    function getResult(){
-        $("#progressBar").modal('show')
-        $.ajax({
-           type: "POST",
-           url: "{{url_for('getResponseLinearReg')}}",
-           data: $("#inputForm").serialize(), // serializes the form's elements.
-           success: function(data)
-           {
-              $("#result").html(data); // show response from the php script.
-           },complete:function()
-           {
-            $("#progressBar").modal('hide')
-           }
-         });
+    $(function() {
+        PotentialChurnerPieChart("topPerPieChart", [412,29],450,400)
+        PotentialChurnerPieChart("lr-attrition-pie", [391,50])
+        PotentialChurnerPieChart("rf-attrition-pie", [423,18])
+        PotentialChurnerPieChart("xgb-attrition-pie", [412,29])
+        PotentialChurnerPieChart("lgb-attrition-pie", [410,31])
+        PotentialChurnerPieChart("cb-attrition-pie", [418,23])
+        PotentialChurnerPieChart("ab-attrition-pie", [396,45])
+        PotentialChurnerPieChart("svm-attrition-pie", [388,53])
+    })
+
+    function PotentialChurnerPieChart(divId, y_pred_count_list,height=450,width=500){
+      
+        var data = [{
+        values: y_pred_count_list,
+        labels: ['Staying', 'Potential Churner'],
+        type: 'pie'
+        }];
+        var layout = {
+            autosize: false,
+        height: width,
+        width: height
+        };
+        Plotly.newPlot(divId, data, layout);
     }
+
 </script>
 
 

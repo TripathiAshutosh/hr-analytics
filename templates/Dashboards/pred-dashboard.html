@@ -1,7 +1,46 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
+<style>
+   .lds-dual-ring.hidden { 
+display: none;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 5% auto;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(240, 34, 147, 0.103);
+    z-index: 999;
+    opacity: 1;
+    transition: all 0.5s;
+}
+</style>
 <script src='https://cdn.plot.ly/plotly-2.14.0.min.js'></script>
 
     <div class="card">
@@ -10,6 +49,40 @@
         </div>
 
         <div class="card-body">
+
+           
+                <div class="card">
+                    <div class="card-header d-flex" id="">                   
+                        <h5><a data-toggle="collapse" href="#predictionResult" aria-expanded="false"
+                            aria-controls="predictionResult">
+                            Live Prediction - Using XGBoost Classifier </a></h5>
+                    </div> 
+                    <div class="card-body collapse show" id="predictionResult">
+                        <form id="inputForm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Upload CSV file having Employees data</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="file" name="file">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-info" onclick="getResult()" value="submit"
+                                        style="cursor: pointer;">Submit</button>
+                                    </div>
+                                </div>               
+                            </div>
+                        </form>
+                        <hr></hr>
+                    <div class="row" id="result">
+
+                    </div>
+                    </div>                    
+                          
+                    
+                </div>
+   
 
             <div class="card">
                 <div class="card-header d-flex" id="">                   
@@ -281,147 +354,9 @@
 
 
 
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h5><b>Live Prediction - In Progress (most likely to be completed by Friday)</b></h5>
-                    </div>
-                    <form id="inputForm">
-                        <!-- <div class="card-body">
+   
 
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">CRIM</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="CRIM" id="crimInputBoxId" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">ZN</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="ZN" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">INDUS</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="INDUS" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">CHAS</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="CHAS" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">NOX</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="NOX" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">RM</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="RM" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">AGE</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="AGE" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">DIS</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="DIS" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">RAD</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="RAD" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">TAX</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="TAX" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">PT</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="PT" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">B</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="B" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="control-label">LSTAT</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input class="form-control" type="text" name="LSTAT" id="" value="0">
-                                </div>
-                            </div>
-                            <div class="card-footer text-center">
-                                <button type="button" class="btn btn-info" onclick="getResult()" value="submit"
-                                    style="cursor: pointer;">Submit</button>
-                            </div>
-                        </div> -->
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header text-center">
-                        <h5><b>Prediction Result</b></h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            Model Predicted employee as potential (churner/non churner)->&nbsp;&nbsp; <span
-                                style="color:red">
-                                <p id="result"></p>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<div class="modal" id="progressBar" role="dialog" data-backdrop="static">
+<div class="modal fade" id="progressBar" role="dialog">
     <div class="d-flex justify-content-center">
         <div class="spinner-border text-info" role="status">
             <span class="sr-only">Loading...</span>
@@ -430,9 +365,10 @@
 
 </div>
 
-
+<div id="loader" class="lds-dual-ring hidden overlay"></div>
 <script>
     $(function() {
+       
         PotentialChurnerPieChart("topPerPieChart", [412,29],450,400)
         PotentialChurnerPieChart("lr-attrition-pie", [391,50])
         PotentialChurnerPieChart("rf-attrition-pie", [423,18])
@@ -457,7 +393,25 @@
         };
         Plotly.newPlot(divId, data, layout);
     }
-
+    
+    function getResult() {
+       
+        $('#loader').removeClass('hidden')
+        var form_data = new FormData($('#inputForm')[0]);
+        $.ajax({
+            type: 'POST',
+            url: '/predictUsingXGB',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+              
+                $("#result").html(data);  
+                $('#loader').addClass('hidden')      
+            },
+        });
+    }
 </script>
 
 

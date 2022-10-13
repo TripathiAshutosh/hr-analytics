@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 import pandas as pd
 import prescriptiveAnalysis as pa
-
+import predictiveAnalysis as pred
 app = Flask(__name__)
 
 @app.route('/',methods=["GET","POST"])
@@ -185,5 +185,43 @@ def predDashboard():
     '''HR Analytics - Predictive Dasboard
     '''
     return render_template("Dashboards/pred-dashboard.html")
+
+
+@app.route('/predictUsingXGB',methods=["Get","POST"])
+def predictUsingXGB():
+    import joblib
+    import pandas as pd
+    print("hello")
+    uploaded_file = request.files['file']
+    df = pd.read_csv(uploaded_file)
+    print("hello")
+    print(df.head())
+    X_test = pred.prepareX_test(df)
+
+    with open("xgb_clf.pkl", 'rb') as file:
+            xgb_clf = joblib.load(file)
+    #xgb_clf = joblib.load('xgb_clf.pkl')
+    predictions_test= xgb_clf.predict(X_test)
+    predictedProbailityScoresForEachClass = xgb_clf.predict_proba(X_test)
+    prob = pd.DataFrame(predictedProbailityScoresForEachClass)
+    prob.head()
+    result = pd.DataFrame()
+    result['Emp_ID']=X_test.index
+    result['Attrition'] = predictions_test
+    result['prob_being_Churnig'] = predictedProbailityScoresForEachClass[:,1]
+    result['prob_being_Staying'] = predictedProbailityScoresForEachClass[:,0]
+    result['Attrition'] = result['Attrition'].apply(lambda x: 'Yes' if x == 1 else 'No')
+    #return result
+    #return render_template('Dashboards/df.html',  tables=[result.to_html(classes='data')], titles=result.columns.values)
+    #return render_template('Dashboards/df.html',  tables=[result.to_html(classes='data', header="true")])
+    return render_template("Dashboards/df.html", column_names=result.columns.values, row_data=list(result.values.tolist()))
+
+def predictEmpChurnProbUsingXGB():
+    import joblib
+    X_test = pred.prepareX_test(df)
+    xgb_clf = joblib.load('xgb_clf.pkl')
+    xgb_clf.predict(X_test)
+    return X_test
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -7,19 +7,19 @@
     color: white;
     text-align: center;
  }
-
+/* #magenta dd0d81 */
  .btn-info {
 	color: #fff;
-	background-color: #dd0d81 !important;
-	border-color: #dd0d81 !important;
+	background-color: #4b00ef !important;
+	border-color: #4b00ef !important;
 }
 .btn-link {
 	font-weight: 400;
-	color: #dd0d81 !important;
+	color: #4b00ef !important;
 	background-color: transparent;
 }
 a {
-	color: #dd0d81 !important;
+	color: #4b00ef !important;
 	text-decoration: none;
 	background-color: transparent;
 	-webkit-text-decoration-skip: objects;

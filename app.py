@@ -191,17 +191,18 @@ def predDashboard():
 def predictUsingXGB():
     import joblib
     import pandas as pd
-    print("hello")
+  
     uploaded_file = request.files['file']
     df = pd.read_csv(uploaded_file)
-    print("hello")
+    
     print(df.head())
     X_test = pred.prepareX_test(df)
 
-    with open("xgb_clf.pkl", 'rb') as file:
+    with open("model/xgb_clf.pkl", 'rb') as file:
             xgb_clf = joblib.load(file)
     #xgb_clf = joblib.load('xgb_clf.pkl')
     predictions_test= xgb_clf.predict(X_test)
+    print(predictions_test)
     predictedProbailityScoresForEachClass = xgb_clf.predict_proba(X_test)
     prob = pd.DataFrame(predictedProbailityScoresForEachClass)
     prob.head()
@@ -219,7 +220,7 @@ def predictUsingXGB():
 def predictEmpChurnProbUsingXGB():
     import joblib
     X_test = pred.prepareX_test(df)
-    xgb_clf = joblib.load('xgb_clf.pkl')
+    xgb_clf = joblib.load('model/xgb_clf.pkl')
     xgb_clf.predict(X_test)
     return X_test
 

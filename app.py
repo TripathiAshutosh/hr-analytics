@@ -223,6 +223,3 @@ def predictEmpChurnProbUsingXGB():
     xgb_clf = joblib.load('model/xgb_clf.pkl')
     xgb_clf.predict(X_test)
     return X_test
-
-if __name__ == '__main__':
-    app.run(debug=True)
